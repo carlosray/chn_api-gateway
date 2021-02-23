@@ -50,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/login").permitAll()
                 .antMatchers("/auth/logout").permitAll()
                 .antMatchers("/actuator/**").hasRole("BASIC")
-                .anyRequest().authenticated()
+                .anyRequest().hasAnyRole("USER", "ADMIN", "BASIC")
 
                 .and()
                 .addFilterBefore(jwtTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
