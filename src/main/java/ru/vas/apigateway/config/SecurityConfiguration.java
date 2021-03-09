@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import ru.vas.apigateway.filter.CorsFilter;
 import ru.vas.apigateway.filter.CustomAuthenticationEntryPoint;
 import ru.vas.apigateway.filter.JwtTokenAuthenticationFilter;
 
@@ -24,6 +25,7 @@ import ru.vas.apigateway.filter.JwtTokenAuthenticationFilter;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final JwtTokenAuthenticationFilter jwtTokenAuthenticationFilter;
     private final CustomAuthenticationEntryPoint basicAuthenticationEntryPoint;
+    private final CorsFilter corsFilter;
     @Value("${auth.basic.user}")
     private String basicUser;
     @Value("${auth.basic.pass}")
@@ -48,11 +50,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/auth/register").permitAll()
                 .antMatchers("/auth/login").permitAll()
-                .antMatchers("/auth/logout").permitAll()
                 .antMatchers("/actuator/**").hasRole("BASIC")
                 .anyRequest().hasAnyRole("USER", "ADMIN", "BASIC")
 
                 .and()
+                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     }
