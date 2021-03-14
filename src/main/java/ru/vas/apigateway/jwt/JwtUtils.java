@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class JwtUtils {
-    @Value("jwt.secret")
+    @Value("${jwt.secret}")
     private String jwtSecret;
     private final static String HEADER_PREFIX = "Bearer ";
 
